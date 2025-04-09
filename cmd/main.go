@@ -29,7 +29,6 @@ func main() {
 
 	// Set up routes
 	routes.SetupRoutes(r, db)
-
 	// Start the server
 	if err := r.Run(":8080"); err != nil {
 		log.Fatal("Error starting the server:", err) // Логируем ошибку запуска сервера
