@@ -60,19 +60,26 @@ func (h *MovieHandler) CreateMovie(c *gin.Context) {
 }
 
 // Обновление информации о фильме
+// Обновление информации о фильме
 func (h *MovieHandler) UpdateMovie(c *gin.Context) {
 	id := c.Param("id")
 	var movie models.Movie
+
 	if err := c.ShouldBindJSON(&movie); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Неверные данные"})
 		return
 	}
+
 	// Преобразуем id в тип uint
 	var movieId uint
 	if _, err := fmt.Sscanf(id, "%d", &movieId); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Неверный формат ID"})
 		return
 	}
+
+	// 👇 МАҢЫЗДЫ: ID-ны movie-ге қолмен орнатамыз
+	movie.ID = movieId
+
 	err := h.service.UpdateMovie(movieId, movie)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Ошибка обновления фильма"})
