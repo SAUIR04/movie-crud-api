@@ -149,14 +149,6 @@ CREATE TABLE movies (
   genre TEXT,
   release_date DATE
 );
-Contributing
-If you'd like to contribute to this project, feel free to fork the repository, create a new branch, and submit a pull request. Here's how you can contribute:
-
-Fork the repository.
-
-Create a new branch for your feature or bugfix.
-
-Make your changes.
 
 Test your changes thoroughly.
 
