@@ -2,28 +2,31 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 	"log"
-	"movie-api/internal/delivery"
-	"movie-api/internal/models"
+	"movie-api/internal/db"
 	"movie-api/internal/routes"
 )
 
 func main() {
-	dsn := "postgres://postgres:2004@localhost:5000/mydatabase?sslmode=disable"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Fatal("Database connection error:", err)
-	}
+	// Дерекқор параметрлерін .env файлы арқылы жүктеу
+
+	// Дерекқорды инициализациялау
+	db.InitDB()
 
 	// Автоматты миграция
-	db.AutoMigrate(&models.Movie{}, &models.User{})
+	//err := db.DB.AutoMigrate(&models.Movie{}, &models.User{})
+	//if err != nil {
+	//	log.Fatal("Error migrating to the DB:", err)
+	//}
 
-	// Auth DB setup
-	delivery.SetAuthDB(db)
-
+	// Gin серверін бастау
 	r := gin.Default()
-	routes.SetupRoutes(r, db)
-	r.Run(":8080")
+
+	// Роуттарды орнату
+	routes.SetupRoutes(r, db.DB)
+
+	// Серверді іске қосу
+	if err := r.Run(":8080"); err != nil {
+		log.Fatal("Error starting the server:", err)
+	}
 }

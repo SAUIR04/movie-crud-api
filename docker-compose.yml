@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  my_postgres_db:
+    image: postgres:17.4-alpine
+    container_name: go-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin04
+      POSTGRES_DB: SauDatabase
+    ports:
+      - "5432:5432"  # Используйте одинаковые порты для host и container
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+  my-item-service:
+    depends_on:
+      - my_postgres_db
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: 'my-item-service-iso'
+    container_name: 'my-item-service-container'
+    environment:
+      DB_HOST: my_postgres_db  # Убедитесь, что имя хоста совпадает
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: admin04
+      DB_NAME: SauDatabase
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./internal/db/migrations:/app/internal/db/migrations
+
+volumes:
+  postgres_data:
+
