@@ -4,7 +4,7 @@ COPY go.mod ./
 RUN go mod download
 COPY . .
 RUN go build -o main ./cmd/main.go
-RUN chmod +x /app/main  # Устанавливаем права на выполнение
+RUN chmod +x /app/main
 
 FROM ubuntu:22.04
 WORKDIR /app

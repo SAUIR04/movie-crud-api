@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 
 services:
   my_postgres_db:
@@ -8,13 +8,11 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin04
-      POSTGRES_DB: SauDatabase
+      POSTGRES_DB: postgres
     ports:
-      - "5432:5432"  # Используйте одинаковые порты для host и container
+      - "5444:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    env_file:
-      - .env
 
   my-item-service:
     depends_on:
@@ -22,19 +20,19 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    env_file:
+      - .env
     image: 'my-item-service-iso'
     container_name: 'my-item-service-container'
     environment:
-      DB_HOST: my_postgres_db  # Убедитесь, что имя хоста совпадает
+      DB_HOST: my_postgres_db
       DB_PORT: 5432
       DB_USER: postgres
       DB_PASSWORD: admin04
-      DB_NAME: SauDatabase
+      DB_NAME: postgres
     ports:
       - "8080:8080"
     volumes:
       - ./internal/db/migrations:/app/internal/db/migrations
-
 volumes:
   postgres_data:
-

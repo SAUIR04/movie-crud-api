@@ -49,7 +49,6 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
 		return
 	}
-
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(creds.Password)); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Wrong password"})
 		return

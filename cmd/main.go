@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"log"
+
 	"movie-api/internal/db"
 	"movie-api/internal/routes"
 )
@@ -12,13 +13,6 @@ func main() {
 
 	// Дерекқорды инициализациялау
 	db.InitDB()
-
-	// Автоматты миграция
-	//err := db.DB.AutoMigrate(&models.Movie{}, &models.User{})
-	//if err != nil {
-	//	log.Fatal("Error migrating to the DB:", err)
-	//}
-
 	// Gin серверін бастау
 	r := gin.Default()
 
