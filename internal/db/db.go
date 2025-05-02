@@ -21,11 +21,8 @@ var DB *gorm.DB
 
 // Инициализация подключения к базе данных
 func InitDB() {
-	log.Println("Loading .env file")
 	if err := godotenv.Load(); err != nil {
-		log.Println("No .env file found, relying on system environment")
-	} else {
-		log.Println(".env file loaded successfully")
+		log.Println("Env file not loaded.")
 	}
 
 	// Чтение параметров подключения из .env файла
