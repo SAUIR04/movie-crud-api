@@ -29,7 +29,6 @@ func (h *MovieHandler) GetMovies(c *gin.Context) {
 // Получение фильма по ID
 func (h *MovieHandler) GetMovieById(c *gin.Context) {
 	id := c.Param("id")
-	// Преобразуем id в тип uint
 	var movieId uint
 	if _, err := fmt.Sscanf(id, "%d", &movieId); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Неверный формат ID"})
@@ -59,8 +58,7 @@ func (h *MovieHandler) CreateMovie(c *gin.Context) {
 	c.JSON(http.StatusCreated, movie)
 }
 
-// Обновление информации о фильме
-// Обновление информации о фильме
+// Обновление фильма
 func (h *MovieHandler) UpdateMovie(c *gin.Context) {
 	id := c.Param("id")
 	var movie models.Movie
@@ -70,14 +68,12 @@ func (h *MovieHandler) UpdateMovie(c *gin.Context) {
 		return
 	}
 
-	// Преобразуем id в тип uint
 	var movieId uint
 	if _, err := fmt.Sscanf(id, "%d", &movieId); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Неверный формат ID"})
 		return
 	}
 
-	// 👇 МАҢЫЗДЫ: ID-ны movie-ге қолмен орнатамыз
 	movie.ID = movieId
 
 	err := h.service.UpdateMovie(movieId, movie)
@@ -91,7 +87,6 @@ func (h *MovieHandler) UpdateMovie(c *gin.Context) {
 // Удаление фильма
 func (h *MovieHandler) DeleteMovie(c *gin.Context) {
 	id := c.Param("id")
-	// Преобразуем id в тип uint
 	var movieId uint
 	if _, err := fmt.Sscanf(id, "%d", &movieId); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Неверный формат ID"})

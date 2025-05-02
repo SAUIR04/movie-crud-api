@@ -21,14 +21,20 @@ func SetupRoutes(r *gin.Engine, db *gorm.DB) {
 
 	movies := r.Group("/api/movies")
 	{
-		movies.GET("/", movieHandler.GetMovies)
-		movies.GET("/:id", movieHandler.GetMovieById)
+		// GET запросы доступны всем
+		movies.GET("/", movieHandler.GetMovies)       // Получение всех фильмов
+		movies.GET("/:id", movieHandler.GetMovieById) // Получение фильма по ID
 
+		// Применяем middleware для аутентификации
 		movies.Use(middleware.AuthRequired())
 		{
-			movies.POST("/", movieHandler.CreateMovie)
-			movies.PUT("/:id", movieHandler.UpdateMovie)
-			movies.DELETE("/:id", movieHandler.DeleteMovie)
+			// Только для администраторов
+			movies.Use(middleware.AdminRequired())
+			{
+				movies.POST("/", movieHandler.CreateMovie)      // Создание фильма
+				movies.PUT("/:id", movieHandler.UpdateMovie)    // Обновление фильма
+				movies.DELETE("/:id", movieHandler.DeleteMovie) // Удаление фильма
+			}
 		}
 	}
 }

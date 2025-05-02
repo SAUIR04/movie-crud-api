@@ -17,6 +17,8 @@ func SetAuthDB(database *gorm.DB) {
 	db = database
 }
 
+// Регистрация пользователя
+// Регистрация пользователя
 func Register(c *gin.Context) {
 	var user models.User
 	if err := c.ShouldBindJSON(&user); err != nil {
@@ -24,16 +26,26 @@ func Register(c *gin.Context) {
 		return
 	}
 
+	// Если роль не указана, назначаем 'user'
+	if user.Role == "" {
+		user.Role = "user" // Значение по умолчанию
+	}
+
+	// Хэшируем пароль
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	user.Password = string(hashedPassword)
 
+	// Сохраняем пользователя в базе данных
 	if err := db.Create(&user).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
 		return
 	}
+
 	c.JSON(http.StatusCreated, gin.H{"message": "User registered"})
 }
 
+// Логин пользователя
+// Логин пользователя
 func Login(c *gin.Context) {
 	var creds struct {
 		Username string `json:"username"`
@@ -54,9 +66,11 @@ func Login(c *gin.Context) {
 		return
 	}
 
+	// Создание JWT токена с ролью
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id":  user.ID,
 		"username": user.Username,
+		"role":     user.Role, // Роль из базы данных
 		"exp":      time.Now().Add(time.Hour * 72).Unix(),
 	})
 	tokenString, _ := token.SignedString(jwtSecret)

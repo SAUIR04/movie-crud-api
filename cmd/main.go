@@ -9,13 +9,10 @@ import (
 )
 
 func main() {
-	// Дерекқор параметрлерін .env файлы арқылы жүктеу
-
 	// Дерекқорды инициализациялау
 	db.InitDB()
 	// Gin серверін бастау
 	r := gin.Default()
-
 	// Роуттарды орнату
 	routes.SetupRoutes(r, db.DB)
 
